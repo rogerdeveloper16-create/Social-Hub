@@ -1,4 +1,5 @@
 import { Feather } from "@expo/vector-icons";
+import { useAuth, useUser } from "@clerk/expo";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -28,6 +29,8 @@ const CELL = (width - 2) / COLS;
 
 export default function ProfileScreen() {
   const { getUserById, getMyPosts, currentUserId } = useSocial();
+  const { user: clerkUser } = useUser();
+  const { signOut } = useAuth();
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<"posts" | "saved">("posts");
@@ -35,6 +38,9 @@ export default function ProfileScreen() {
 
   const me = getUserById(currentUserId);
   const myPosts = getMyPosts();
+
+  const displayName = clerkUser?.fullName ?? clerkUser?.firstName ?? me?.name ?? "You";
+  const displayUsername = clerkUser?.username ?? (clerkUser?.primaryEmailAddress?.emailAddress?.split("@")[0]) ?? me?.username ?? "you";
 
   const stat = (val: number | undefined, label: string) => (
     <View style={styles.stat}>
@@ -45,20 +51,23 @@ export default function ProfileScreen() {
 
   const Header = () => (
     <View>
-      <View style={[styles.topBar, { paddingTop: headerTop, borderBottomColor: "transparent" }]}>
-        <Text style={[styles.username, { color: colors.foreground }]}>{me?.username ?? "you"}</Text>
+      <View style={[styles.topBar, { paddingTop: headerTop }]}>
+        <Text style={[styles.username, { color: colors.foreground }]}>{displayUsername}</Text>
         <View style={styles.topBarActions}>
           <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
             <Feather name="plus-square" size={24} color={colors.foreground} />
           </TouchableOpacity>
-          <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <Feather name="menu" size={24} color={colors.foreground} />
+          <TouchableOpacity
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            onPress={() => signOut()}
+          >
+            <Feather name="log-out" size={22} color={colors.mutedForeground} />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.profileInfo}>
-        <Avatar color={me?.avatarColor ?? "#FF3B5C"} name={me?.name ?? "Me"} size={80} fontSize={28} />
+        <Avatar color={me?.avatarColor ?? "#FF3B5C"} name={displayName} size={80} fontSize={28} />
         <View style={styles.statsRow}>
           {stat(me?.postCount, "Posts")}
           {stat(me?.followers, "Followers")}
@@ -67,7 +76,10 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.bioSection}>
-        <Text style={[styles.name, { color: colors.foreground }]}>{me?.name}</Text>
+        <Text style={[styles.name, { color: colors.foreground }]}>{displayName}</Text>
+        <Text style={[styles.email, { color: colors.mutedForeground }]}>
+          {clerkUser?.primaryEmailAddress?.emailAddress ?? ""}
+        </Text>
         <Text style={[styles.bio, { color: colors.foreground }]}>{me?.bio}</Text>
       </View>
 
@@ -84,10 +96,16 @@ export default function ProfileScreen() {
       </View>
 
       <View style={[styles.tabs, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity style={[styles.tabBtn, { borderBottomColor: activeTab === "posts" ? colors.foreground : "transparent", borderBottomWidth: 2 }]} onPress={() => setActiveTab("posts")}>
+        <TouchableOpacity
+          style={[styles.tabBtn, { borderBottomColor: activeTab === "posts" ? colors.foreground : "transparent", borderBottomWidth: 2 }]}
+          onPress={() => setActiveTab("posts")}
+        >
           <Feather name="grid" size={22} color={activeTab === "posts" ? colors.foreground : colors.mutedForeground} />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.tabBtn, { borderBottomColor: activeTab === "saved" ? colors.foreground : "transparent", borderBottomWidth: 2 }]} onPress={() => setActiveTab("saved")}>
+        <TouchableOpacity
+          style={[styles.tabBtn, { borderBottomColor: activeTab === "saved" ? colors.foreground : "transparent", borderBottomWidth: 2 }]}
+          onPress={() => setActiveTab("saved")}
+        >
           <Feather name="bookmark" size={22} color={activeTab === "saved" ? colors.foreground : colors.mutedForeground} />
         </TouchableOpacity>
       </View>
@@ -131,14 +149,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 10,
   },
-  username: {
-    fontSize: 20,
-    fontFamily: "Inter_700Bold",
-  },
-  topBarActions: {
-    flexDirection: "row",
-    gap: 16,
-  },
+  username: { fontSize: 20, fontFamily: "Inter_700Bold" },
+  topBarActions: { flexDirection: "row", gap: 16 },
   profileInfo: {
     flexDirection: "row",
     alignItems: "center",
@@ -146,82 +158,21 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     gap: 24,
   },
-  statsRow: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  stat: {
-    alignItems: "center",
-    gap: 2,
-  },
-  statNum: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 18,
-  },
-  statLabel: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 13,
-  },
-  bioSection: {
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    gap: 2,
-  },
-  name: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 14,
-  },
-  bio: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  buttons: {
-    flexDirection: "row",
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingBottom: 14,
-  },
-  editBtn: {
-    flex: 1,
-    paddingVertical: 8,
-    borderRadius: 10,
-    borderWidth: 1,
-    alignItems: "center",
-  },
-  editBtnText: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 14,
-  },
-  addBtn: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 10,
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tabs: {
-    flexDirection: "row",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  tabBtn: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 12,
-  },
-  empty: {
-    alignItems: "center",
-    paddingTop: 40,
-    gap: 8,
-  },
-  emptyTitle: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 16,
-  },
-  emptyText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-  },
+  statsRow: { flex: 1, flexDirection: "row", justifyContent: "space-around" },
+  stat: { alignItems: "center", gap: 2 },
+  statNum: { fontFamily: "Inter_700Bold", fontSize: 18 },
+  statLabel: { fontFamily: "Inter_400Regular", fontSize: 13 },
+  bioSection: { paddingHorizontal: 16, paddingBottom: 12, gap: 2 },
+  name: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
+  email: { fontFamily: "Inter_400Regular", fontSize: 12 },
+  bio: { fontFamily: "Inter_400Regular", fontSize: 14, lineHeight: 20 },
+  buttons: { flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingBottom: 14 },
+  editBtn: { flex: 1, paddingVertical: 8, borderRadius: 10, borderWidth: 1, alignItems: "center" },
+  editBtnText: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
+  addBtn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center" },
+  tabs: { flexDirection: "row", borderBottomWidth: StyleSheet.hairlineWidth },
+  tabBtn: { flex: 1, alignItems: "center", paddingVertical: 12 },
+  empty: { alignItems: "center", paddingTop: 40, gap: 8 },
+  emptyTitle: { fontFamily: "Inter_600SemiBold", fontSize: 16 },
+  emptyText: { fontFamily: "Inter_400Regular", fontSize: 14 },
 });
