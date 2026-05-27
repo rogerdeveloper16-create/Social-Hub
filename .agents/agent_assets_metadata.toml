@@ -1,0 +1,32 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "KqDpqKRmoY1VYS8qnK_Sk"
+uri = "file://artifacts/mobile/assets/images/icon.png"
+type = "image"
+title = "social app icon"
+
+[[generated]]
+id = "gz8QI9UAX4VN_b9LdV7J9"
+uri = "file://artifacts/mobile/assets/images/splash.png"
+type = "image"
+title = "social app splash"
+
+[[generated]]
+id = "nrZWnqBohi7e2JZmYhfVS"
+uri = "file://artifacts/mobile/assets/images/post1.png"
+type = "image"
+title = "social post photo 1"
+
+[[generated]]
+id = "OacVUdAd3tnF2cqLuT8FV"
+uri = "file://artifacts/mobile/assets/images/post2.png"
+type = "image"
+title = "social post photo 2"
+
+[[generated]]
+id = "FrHhb50FOEGtGrL5SLFnk"
+uri = "file://artifacts/mobile/assets/images/post3.png"
+type = "image"
+title = "social post photo 3"
