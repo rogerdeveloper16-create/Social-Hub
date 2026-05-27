@@ -1,27 +1,30 @@
 {
   "expo": {
-    "name": "Vibe",
-    "slug": "mobile",
+    "name": "VIBE",
+    "slug": "vibe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "vibe",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0d0d0d"
+      "backgroundColor": "#121212"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.vibe.social"
+      "bundleIdentifier": "com.vibe.app"
     },
     "android": {
-      "package": "com.vibe.social",
+      "package": "com.vibe.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#0d0d0d"
+        "backgroundColor": "#121212"
       },
       "permissions": []
     },
