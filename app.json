@@ -1,26 +1,32 @@
 {
   "expo": {
-    "name": "VIBE",
-    "slug": "vibe",
+    "name": "My Expo App",
+    "slug": "my-expo-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#121212"
+      "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "android": {
-      "package": "com.vibe.app"
+    "ios": {
+      "supportsTablet": true
     },
-    "extra": {
-      "eas": {
-        "projectId": "692b2f81-cf4a-4721-9f0f-accdcd5510f6"
-      }
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.example.myexpoapp"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
   }
 }
