@@ -16,6 +16,11 @@
     ],
     "android": {
       "package": "com.vibe.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "692b2f81-cf4a-4721-9f0f-accdcd5510f6"
+      }
     }
   }
 }
